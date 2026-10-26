@@ -10,44 +10,98 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ApiPublicCronPncpSyncRouteImport } from './routes/api/public/cron/pncp-sync'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
+import { Route as PainelRouteImport } from './routes/_authenticated/painel'
+import { Route as FornecedoresRouteImport } from './routes/_authenticated/fornecedores'
+import { Route as SincronizacaoRouteImport } from './routes/_authenticated/sincronizacao'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({ id: '/auth', path: '/auth', getParentRoute: () => rootRouteImport } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({ id: '/reset-password', path: '/reset-password', getParentRoute: () => rootRouteImport } as any)
 const ApiPublicCronPncpSyncRoute = ApiPublicCronPncpSyncRouteImport.update({
   id: '/api/public/cron/pncp-sync',
   path: '/api/public/cron/pncp-sync',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const FornecedoresRoute = FornecedoresRouteImport.update({
+  id: '/fornecedores',
+  path: '/fornecedores',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const SincronizacaoRoute = SincronizacaoRouteImport.update({
+  id: '/sincronizacao',
+  path: '/sincronizacao',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/public/cron/pncp-sync': typeof ApiPublicCronPncpSyncRoute
+  '/painel': typeof PainelRoute
+  '/fornecedores': typeof FornecedoresRoute
+  '/sincronizacao': typeof SincronizacaoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/public/cron/pncp-sync': typeof ApiPublicCronPncpSyncRoute
+  '/painel': typeof PainelRoute
+  '/fornecedores': typeof FornecedoresRoute
+  '/sincronizacao': typeof SincronizacaoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/public/cron/pncp-sync': typeof ApiPublicCronPncpSyncRoute
+  '/_authenticated': typeof AuthenticatedRoute
+  '/painel': typeof PainelRoute
+  '/fornecedores': typeof FornecedoresRoute
+  '/sincronizacao': typeof SincronizacaoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/cron/pncp-sync'
+  fullPaths: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/cron/pncp-sync'
-  id: '__root__' | '/' | '/api/public/cron/pncp-sync'
+  to: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao'
+  id: '__root__' | '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/_authenticated' | '/painel' | '/fornecedores' | '/sincronizacao'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ApiPublicCronPncpSyncRoute: typeof ApiPublicCronPncpSyncRoute
+  AuthenticatedRoute: typeof AuthenticatedRoute
 }
+
+const authenticatedRouteChildren = {
+  PainelRoute: PainelRoute,
+  FornecedoresRoute: FornecedoresRoute,
+  SincronizacaoRoute: SincronizacaoRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(authenticatedRouteChildren)
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -58,6 +112,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/cron/pncp-sync': {
       id: '/api/public/cron/pncp-sync'
       path: '/api/public/cron/pncp-sync'
@@ -65,12 +133,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCronPncpSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/fornecedores': {
+      id: '/fornecedores'
+      path: '/fornecedores'
+      fullPath: '/fornecedores'
+      preLoaderRoute: typeof FornecedoresRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/sincronizacao': {
+      id: '/sincronizacao'
+      path: '/sincronizacao'
+      fullPath: '/sincronizacao'
+      preLoaderRoute: typeof SincronizacaoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ApiPublicCronPncpSyncRoute: ApiPublicCronPncpSyncRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
@@ -85,3 +177,4 @@ declare module '@tanstack/react-start' {
     config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }
+
