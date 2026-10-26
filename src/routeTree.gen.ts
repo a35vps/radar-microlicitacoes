@@ -17,6 +17,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route
 import { Route as PainelRouteImport } from './routes/_authenticated/painel'
 import { Route as FornecedoresRouteImport } from './routes/_authenticated/fornecedores'
 import { Route as SincronizacaoRouteImport } from './routes/_authenticated/sincronizacao'
+import { Route as OportunidadesIdRouteImport } from './routes/_authenticated/oportunidades.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -49,6 +50,11 @@ const SincronizacaoRoute = SincronizacaoRouteImport.update({
   path: '/sincronizacao',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const OportunidadesIdRoute = OportunidadesIdRouteImport.update({
+  id: '/oportunidades/$id',
+  path: '/oportunidades/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof PainelRoute
   '/fornecedores': typeof FornecedoresRoute
   '/sincronizacao': typeof SincronizacaoRoute
+  '/oportunidades/$id': typeof OportunidadesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/painel': typeof PainelRoute
   '/fornecedores': typeof FornecedoresRoute
   '/sincronizacao': typeof SincronizacaoRoute
+  '/oportunidades/$id': typeof OportunidadesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,13 +86,14 @@ export interface FileRoutesById {
   '/painel': typeof PainelRoute
   '/fornecedores': typeof FornecedoresRoute
   '/sincronizacao': typeof SincronizacaoRoute
+  '/oportunidades/$id': typeof OportunidadesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao'
+  fullPaths: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao' | '/oportunidades/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao'
-  id: '__root__' | '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/_authenticated' | '/painel' | '/fornecedores' | '/sincronizacao'
+  to: '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/painel' | '/fornecedores' | '/sincronizacao' | '/oportunidades/$id'
+  id: '__root__' | '/' | '/auth' | '/reset-password' | '/api/public/cron/pncp-sync' | '/_authenticated' | '/painel' | '/fornecedores' | '/sincronizacao' | '/oportunidades/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -99,6 +108,7 @@ const authenticatedRouteChildren = {
   PainelRoute: PainelRoute,
   FornecedoresRoute: FornecedoresRoute,
   SincronizacaoRoute: SincronizacaoRoute,
+  OportunidadesIdRoute: OportunidadesIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(authenticatedRouteChildren)
@@ -152,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/sincronizacao'
       fullPath: '/sincronizacao'
       preLoaderRoute: typeof SincronizacaoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/oportunidades/$id': {
+      id: '/oportunidades/$id'
+      path: '/oportunidades/$id'
+      fullPath: '/oportunidades/$id'
+      preLoaderRoute: typeof OportunidadesIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
   }
